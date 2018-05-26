@@ -176,6 +176,8 @@ PODS:
     - React
   - react-native-maps (0.21.0):
     - React
+  - react-native-spinkit (1.0.2):
+    - React
   - React/Core (0.55.3):
     - yoga (= 0.55.3.React)
   - React/CxxBridge (0.55.3):
@@ -245,6 +247,7 @@ DEPENDENCIES:
   - GooglePlaces
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-maps (from `../node_modules/react-native-maps`)
+  - react-native-spinkit (from `../node_modules/react-native-spinkit`)
   - React/Core (from `../node_modules/react-native`)
   - React/CxxBridge (from `../node_modules/react-native`)
   - React/DevSupport (from `../node_modules/react-native`)
@@ -308,6 +311,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-maps"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
+  react-native-spinkit:
+    :path: "../node_modules/react-native-spinkit"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga/yoga.podspec"
 
@@ -350,8 +355,9 @@ SPEC CHECKSUMS:
   React: aa2040dbb6f317b95314968021bd2888816e03d5
   react-native-google-maps: 2cfe3b01f8422c7dae51d8764139fd70f888cfce
   react-native-maps: 066c2afcc89e18726377bcc685315f989ca22449
+  react-native-spinkit: c9f5826e1a0bf0da889b3795278eb96ae15c1350
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: 91f605a84da522f6f0185fd47a092a0b6cc0ad8b
+PODFILE CHECKSUM: 38e40712aa88410b094bacd2bca88575a9407351
 
 COCOAPODS: 1.5.0

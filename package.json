@@ -15,7 +15,8 @@
     "ios": "react-native run-ios",
     "rename": "node ./bin/rename.js",
     "start": "react-native start",
-    "linkIcons": "react-native link react-native-vector-icons",
+    "link-react-native-vector-icons": "react-native link react-native-vector-icons",
+    "link-react-native-spinkit": "react-native link react-native-spinkit",
     "test": "jest"
   },
   "jest": {

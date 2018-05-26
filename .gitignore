@@ -64,3 +64,4 @@ GoogleService-Info.plist
 
 # IOS Specific
 /ios/Mandala/Info.plist
+/ios/Mandala/AppDelegate.m
