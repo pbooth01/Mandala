@@ -9,6 +9,7 @@ class PostModalSend extends React.Component {
   render(){
     return (
         <Button
+          disabled = {!this.props.canSend}
           rounded={true}
           buttonStyle={styles.button_style}
           textStyle={styles.button_text_style}

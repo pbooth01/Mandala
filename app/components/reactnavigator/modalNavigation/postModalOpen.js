@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 class PostModalOpen extends React.Component {
 
@@ -9,7 +9,7 @@ class PostModalOpen extends React.Component {
     return (
       <TouchableOpacity style={styles.button_container}onPress={() => this.props.navigation.navigate('PostEventModal')}>
         <View>
-          <Ionicons name={'ios-brush'} size={35} color={'#fff'} />
+          <Icon name={'pencil'} size={35} color={'#fff'} />
         </View>
       </TouchableOpacity>
     );

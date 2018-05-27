@@ -17,6 +17,7 @@
     "start": "react-native start",
     "link-react-native-vector-icons": "react-native link react-native-vector-icons",
     "link-react-native-spinkit": "react-native link react-native-spinkit",
+    "link-react-native-google-places": "react-native link react-native-google-places",
     "test": "jest"
   },
   "jest": {
@@ -32,6 +33,7 @@
     "react-native-elements": "^0.19.1",
     "react-native-fbsdk": "^0.7.0",
     "react-native-firebase": "^4.0.7",
+    "react-native-google-places": "^2.5.0",
     "react-native-maps": "^0.21.0",
     "react-native-spinkit": "^1.1.1",
     "react-native-textinput-effects": "^0.4.2",

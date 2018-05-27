@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, DatePickerIOS, SafeAreaView, StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { Alert, Button, DatePickerIOS, SafeAreaView, StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { Avatar } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { withNavigation } from 'react-navigation';
@@ -33,16 +33,28 @@ export default class TimeSelection extends React.Component {
   constructor(props){
     super(props);
 
-    const startDateTime = TimeUtils.getNearestFutureTimeForInterval(15, new Date());
+    let startDateTime = TimeUtils.getNearestFutureTimeForInterval(15, new Date());
+    let initialStartTime = props.navigation.getParam('startTime', startDateTime);
+    let initialEndTime = props.navigation.getParam('endTime', null);
 
     this.state = {
-      hasEndDate: false,
+      hasEndDate: initialStartTime && initialEndTime,
       curFocusedTime: 'start',
       accessedTime: new Date(),
-      startDateTime: startDateTime,
-      endDateTime: null,
+      startDateTime: TimeUtils.getDateCopy(initialStartTime),
+      endDateTime: initialEndTime ? TimeUtils.getDateCopy(initialEndTime) : null,
       minuteInterval: 5 /*workaround for date picker simulator issue*/
     }
+
+    this._selectTime = this._selectTime.bind(this);
+    this._cancelTimeSelection = this._cancelTimeSelection.bind(this);
+  }
+
+  componentWillMount(){
+    this.props.navigation.setParams({
+      selectTime: this._selectTime,
+      cancelTimeSelection:  this._cancelTimeSelection
+    });
   }
 
   componentDidMount(){
@@ -50,39 +62,75 @@ export default class TimeSelection extends React.Component {
   }
 
   static navigationOptions = ({ navigation }) => {
-    const { params } = navigation.state;
+    const params  = navigation.state.params || {};
     return {
-      headerTitle: 'Select Time'
+      headerTitle: 'Select Time',
+      headerLeft: (
+        <Button onPress={() => params.cancelTimeSelection()} title="Cancel"/>
+      ),
+      headerRight: (
+        <Button onPress={() => params.selectTime()} title="Ok"/>
+      ),
     }
   };
 
+  _selectTime(){
+    const updateTimeFunction = this.props.navigation.getParam('updateTimeSelection', null);
+    if(updateTimeFunction && typeof updateTimeFunction === 'function'){
+      updateTimeFunction(this.state.startDateTime, this.state.endDateTime);
+      this.props.navigation.goBack();
+    }else{
+      Alert.alert('Error', 'An error occured saving your time');
+    }
+  }
+
+  _cancelTimeSelection(){
+    this.props.navigation.goBack();
+  }
+
   updateDate(newDate){
-    if(this.state.curFocusedTime === 'start'){
+    if(this.state.hasEndDate){
+
+      let startDateMoment = moment(this.state.startDateTime);
+      let endDateMoment = moment(this.state.endDateTime);
+
+      if(this.state.curFocusedTime === 'start'){
+        startDateMoment.year(newDate.year);
+        startDateMoment.month(newDate.month - 1);
+        startDateMoment.date(newDate.day);
+
+        if(!startDateMoment.isAfter(endDateMoment, 'day')){
+          if(startDateMoment.isSame(endDateMoment, 'day')){
+            startDateMoment.hour(endDateMoment.hour());
+            startDateMoment.minute(endDateMoment.minute());
+          }
+          this.setState({
+            startDateTime: startDateMoment.toDate()
+          });
+        }
+      }else{
+        endDateMoment.year(newDate.year);
+        endDateMoment.month(newDate.month - 1);
+        endDateMoment.date(newDate.day);
+
+        if(!endDateMoment.isBefore(startDateMoment, 'day')){
+          if(endDateMoment.isSame(startDateMoment, 'day')){
+            endDateMoment.hour(startDateMoment.hour());
+            endDateMoment.minute(startDateMoment.minute());
+          }
+          this.setState({
+            endDateTime: endDateMoment.toDate()
+          });
+        }
+      }
+    }else{
       let curDateMoment = moment(this.state.startDateTime);
       curDateMoment.year(newDate.year);
       curDateMoment.month(newDate.month - 1);
       curDateMoment.date(newDate.day);
-      if(this.state.hasEndDate){
-        if(!curDateMoment.isAfter(this.state.endDateTime) && !curDateMoment.isSame(this.state.endDateTime)){
-          this.setState({
-            startDateTime: curDateMoment.toDate()
-          });
-        }
-      }else{
-        this.setState({
-          startDateTime: curDateMoment.toDate()
-        });
-      }
-    }else{
-      let curDateMoment = moment(this.state.endDateTime);
-      curDateMoment.year(newDate.year);
-      curDateMoment.month(newDate.month - 1);
-      curDateMoment.date(newDate.day);
-      if(!curDateMoment.isBefore(this.state.startDateTime) && !curDateMoment.isSame(this.state.startDateTime)){
-        this.setState({
-          endDateTime: curDateMoment.toDate()
-        });
-      }
+      this.setState({
+        startDateTime: curDateMoment.toDate()
+      });
     }
   }
 
@@ -99,7 +147,6 @@ export default class TimeSelection extends React.Component {
   }
 
   removeEndDateTime(){
-
     this.setState({
         curFocusedTime: 'start'
     }, () => {

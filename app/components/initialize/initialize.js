@@ -5,12 +5,10 @@ import firebase from 'react-native-firebase';
 import { Provider } from 'react-redux';
 import UsersAPI from '../../api/firebase/users/usersAPI.js';
 
-
 import StartupScreen from '../../screens/startup/startup.js';
 import SignupScreen from '../../screens/signup/signup.js';
 import HomeScreen from '../../screens/home/home.js';
 import Home3Screen from '../../screens/home/home3.js';
-
 
 /*Redux Code*/
 import store from '../../redux/store/createStore.js';
@@ -39,7 +37,6 @@ export default class Initialize extends React.Component {
       if(user){
         this.usersAPI.getAssociatedUserData(user.uid)
         .then(user => {
-
           this.setState({
             loading: false,
             user

@@ -39,40 +39,31 @@ export default class SmartCalendar extends React.Component {
     return new Date();
   }
 
-  getDateSelectionObjectsForPeriod(start, end){
+  getMarkedDates(){
     let markedDays = {};
+    const startStyle = this.props.curFocusedTime === 'start' ? controlSelectStyle : nonControlSelectStyle;
+    const endStyle = this.props.curFocusedTime === 'end' ? controlSelectStyle : nonControlSelectStyle;
+    const startMoment = moment(this.props.startDate);
+    markedDays[startMoment.format('YYYY-MM-DD')] = Object.assign({}, startStyle);
 
-    if(start && end){
-      const startMoment = moment(start);
-      const endMoment = moment(end);
+    if(this.props.endDate){
+      const endMoment = moment(this.props.endDate);
       const differenceDuration = moment.duration(endMoment.diff(startMoment));
-      const lengthInDays = differenceDuration.asDays();
+      const lengthInDays = Math.floor(differenceDuration.asDays());
 
       for(let i = 0; i < lengthInDays; i++){
-        let tempMoment = moment(start);
+        let tempMoment = moment(this.props.startDate);
         tempMoment.add(i+1, 'days');
         markedDays[tempMoment.format('YYYY-MM-DD')] = Object.assign({}, nonControlSelectStyle);
       }
+
+      if(startMoment.isSame(endMoment,'day')){
+        markedDays[startMoment.format('YYYY-MM-DD')] = Object.assign({}, controlSelectStyle);
+      }else{
+        markedDays[endMoment.format('YYYY-MM-DD')] = Object.assign({}, endStyle);
+      }
     }
     return markedDays;
-  }
-
-  getMarkedDates(){
-
-    let markedDates = {};
-    const startStyle = this.props.curFocusedTime === 'start' ? controlSelectStyle : nonControlSelectStyle;
-    const endStyle = this.props.curFocusedTime === 'end' ? controlSelectStyle : nonControlSelectStyle;
-
-    if(this.props.startDate){
-      if(this.props.endDate){
-        const endDateMoment = moment(this.props.endDate);
-        markedDates[endDateMoment.format('YYYY-MM-DD')] = endStyle;
-        markedDates = Object.assign(this.getDateSelectionObjectsForPeriod(this.props.startDate, this.props.endDate), markedDates);
-      }
-      const startDateMoment = moment(this.props.startDate);
-      markedDates[startDateMoment.format('YYYY-MM-DD')] = startStyle;
-    }
-    return markedDates
   }
 
   render(){
